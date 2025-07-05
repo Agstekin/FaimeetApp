@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "592922567982",
+    "project_id": "faimeetapp",
+    "storage_bucket": "faimeetapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592922567982:android:0496e1595ed0f98b0706bf",
+        "android_client_info": {
+          "package_name": "com.faimeetapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592922567982-2ps86hng9lhekn0dm7hkf4227bo4svg6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.faimeetapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "592922567982-oatslsud24jn5jbfvjjt24m5gh0k8n8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpILNV05Xjh5h80WWMXOra_CDBSeJB_Xg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592922567982-oatslsud24jn5jbfvjjt24m5gh0k8n8o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

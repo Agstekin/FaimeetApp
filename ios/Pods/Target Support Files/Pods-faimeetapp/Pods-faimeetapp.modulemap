@@ -1,0 +1,6 @@
+module Pods_faimeetapp {
+  umbrella header "Pods-faimeetapp-umbrella.h"
+
+  export *
+  module * { export * }
+}
