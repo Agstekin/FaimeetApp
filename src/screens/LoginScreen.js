@@ -9,7 +9,8 @@ import {
   StatusBar,
   Animated,
   SafeAreaView,
-  BackHandler
+  BackHandler,
+  Alert
 } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
@@ -93,7 +94,7 @@ const LoginScreen = () => {
 
   const testNavigation = () => {
   console.log('Navigating to HomeScreen...');
-  navigation.navigate('HomeScreen', {
+  navigation.navigate('MainTabs', {
     name: 'Test User',
     email: 'testuser@example.com',
     photo: null,
@@ -107,7 +108,7 @@ const signInfuncUserMail = () => {
  createUserWithEmailAndPassword(getAuth(), 'jane.doe@example.com', 'SuperSecretPassword!')
   .then(() => {
     console.log('User account created & signed in!');
-    alert("bhai user signed in successfully")
+    
   })
   .catch(error => {
     if (error.code === 'auth/email-already-in-use') {
@@ -191,10 +192,11 @@ const signInfuncUserMail = () => {
 
   async function onGoogleButtonPress() {
 
-    alert("clicked button")
+   
 
     console.log("Pressed the sign in button")
   // Check if your device supports Google Play
+  try{
   await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
   // Get the users ID token
   const signInResult = await GoogleSignin.signIn();
@@ -232,8 +234,13 @@ const signInfuncUserMail = () => {
     console.log("Email:", usser.email);
     console.log("UID:", usser.uid);
     console.log("Photo URL:", usser.photoURL);
-
+    testNavigation();
     return usser;
+   }
+   catch(error){
+        console.error(error);
+        Alert.alert("Google Sign-In Failed");
+   }
 
 }
 
