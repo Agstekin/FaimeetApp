@@ -1,0 +1,1 @@
+export const GET_HANGOUT_DOC_ID = "jZdGpXqJvWBs3M8J9ud";
