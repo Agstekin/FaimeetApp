@@ -15,8 +15,18 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import Gstyle from '../styles/stylesheetconst';
 const { width, height } = Dimensions.get('window');
 const Tab = createBottomTabNavigator();
+
+// firebase mock test 
+import firestore from '@react-native-firebase/firestore';
+import { getHangoutDetails, createHangout } from '../firebase/firebaseService';
+
+// Screens
+import HangoutDetailsScreen from './HangoutDetailsScreen';
+import CreateHangoutScreen from './CreateHangoutScreen';
+
 
 // Mock data
 const hangouts = [
@@ -52,7 +62,11 @@ const hangouts = [
   },
 ];
 
+// hangout data came from firebase
+const hangoutData = ''
+
 export default function ExploreScreen() {
+
   const [currentScreen, setCurrentScreen] = useState('home');
   const [selectedHangout, setSelectedHangout] = useState(null);
   const [search, setSearch] = useState('');
@@ -62,7 +76,7 @@ export default function ExploreScreen() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'Outdoor',
+    category: '',
     date: '',
     location: '',
     message: '',
@@ -91,6 +105,10 @@ export default function ExploreScreen() {
   const navigateToHome = () => {
     setCurrentScreen('home');
   };
+
+  const navigateToExplore = () => {
+    setCurrentScreen('Explore')
+  }
 
   const HangoutCard = ({ hangout, onPress }) => {
     const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -151,7 +169,7 @@ export default function ExploreScreen() {
   <View style={styles.headerContainer}>
     
     {/* First Row: Search + Filter */}
-    <View style={styles.headerRow}>
+    <View style={Gstyle.headerRow}>
       <TextInput
         placeholder="Search..."
         value={search}
@@ -236,125 +254,128 @@ export default function ExploreScreen() {
     </View>
   );
 
-  const HangoutDetailsScreen = () => (
-    <View style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
-      <View style={styles.detailsHeader}>
-        <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.detailsTitle}>Hangout Details</Text>
-        <TouchableOpacity style={styles.optionsButton}>
-          <Text style={styles.optionsButtonText}>⋯</Text>
-        </TouchableOpacity>
-      </View>
+  // const HangoutDetailsScreen = () => (
+  //   <View style={styles.screen}>
+  //     <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
+  //     <View style={styles.detailsHeader}>
+  //       <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
+  //         <Text style={styles.backButtonText}>←</Text>
+  //       </TouchableOpacity>
+  //       <Text style={styles.detailsTitle}>Hangout Details</Text>
+  //       <TouchableOpacity style={styles.optionsButton}>
+  //         <Text style={styles.optionsButtonText}>⋯</Text>
+  //       </TouchableOpacity>
+  //     </View>
       
-      {selectedHangout && (
-        <ScrollView style={styles.detailsContent} showsVerticalScrollIndicator={false}>
-          <Text style={styles.detailsHangoutTitle}>{selectedHangout.title}</Text>
-          <View style={styles.detailsImageContainer}>
-            <View style={styles.detailsMockImage} />
-            <TouchableOpacity style={styles.playButton}>
-              <Text style={styles.playButtonText}>▶</Text>
-            </TouchableOpacity>
-          </View>
+  //     {selectedHangout && (
+  //       <ScrollView style={styles.detailsContent} showsVerticalScrollIndicator={false}>
+  //         <Text style={styles.detailsHangoutTitle}>{selectedHangout.title}</Text>
+  //         <View style={styles.detailsImageContainer}>
+  //           <View style={styles.detailsMockImage} />
+  //           <TouchableOpacity style={styles.playButton}>
+  //             <Text style={styles.playButtonText}>▶</Text>
+  //           </TouchableOpacity>
+  //         </View>
           
-          <Text style={styles.detailsMainTitle}>{selectedHangout.title}</Text>
-          <Text style={styles.detailsDateTime}>
-            {selectedHangout.date} • {selectedHangout.time}
-          </Text>
-          <View style={styles.detailsLocationRow}>
-            <Text style={styles.locationIcon}>📍</Text>
-            <Text style={styles.detailsLocationText}>{selectedHangout.location}</Text>
-            <View style={styles.detailsCategoryBadge}>
-              <Text style={styles.categoryText}>{selectedHangout.category}</Text>
-            </View>
-          </View>
+  //         <Text style={styles.detailsMainTitle}>{selectedHangout.title}</Text>
+  //         <Text style={styles.detailsDateTime}>
+  //           {selectedHangout.date} • {selectedHangout.time}
+  //         </Text>
+  //         <View style={styles.detailsLocationRow}>
+  //           <Text style={styles.locationIcon}>📍</Text>
+  //           <Text style={styles.detailsLocationText}>{selectedHangout.location}</Text>
+  //           <View style={styles.detailsCategoryBadge}>
+  //             <Text style={styles.categoryText}>{selectedHangout.category}</Text>
+  //           </View>
+  //         </View>
           
-          <Text style={styles.detailsDescription}>{selectedHangout.description}</Text>
+  //         <Text style={styles.detailsDescription}>{selectedHangout.description}</Text>
           
-          <Text style={styles.descriptionLabel}>Description</Text>
-          <Text style={styles.fullDescription}>{selectedHangout.description}</Text>
+  //         <Text style={styles.descriptionLabel}>Description</Text>
+  //         <Text style={styles.fullDescription}>{selectedHangout.description}</Text>
           
-          <TextInput
-            style={styles.messageInput}
-            placeholder="Message..."
-            placeholderTextColor="#999"
-            multiline
-          />
+  //         <TextInput
+  //           style={styles.messageInput}
+  //           placeholder="Message..."
+  //           placeholderTextColor="#999"
+  //           multiline
+  //         />
           
-          <TouchableOpacity style={styles.joinHangoutButton}>
-            <Text style={styles.joinHangoutButtonText}>Join Hangout</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      )}
-    </View>
-  );
+  //         <TouchableOpacity style={styles.joinHangoutButton}>
+  //           <Text style={styles.joinHangoutButtonText}>Join Hangout</Text>
+  //         </TouchableOpacity>
+  //       </ScrollView>
+  //     )}
+  //   </View>
+  // );
 
-  const CreateHangoutScreen = () => (
-    <View style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
-      <View style={styles.createHeader}>
-        <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.createTitle}>Create Hangout</Text>
-      </View>
+  // const CreateHangoutScreen = () => (
+
+
+    
+  //   <View style={styles.screen}>
+  //     <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
+  //     <View style={styles.createHeader}>
+  //       <TouchableOpacity onPress={navigateToHome} style={styles.backButton}>
+  //         <Text style={styles.backButtonText}>←</Text>
+  //       </TouchableOpacity>
+  //       <Text style={styles.createTitle}>Create Hangout</Text>
+  //     </View>
       
-      <ScrollView style={styles.createContent} showsVerticalScrollIndicator={false}>
-        <TouchableOpacity style={styles.uploadSection}>
-          <View style={styles.uploadIcon}>
-            <Text style={styles.uploadIconText}>📹</Text>
-          </View>
-          <Text style={styles.uploadText}>Upload Video</Text>
-        </TouchableOpacity>
+  //     <ScrollView style={styles.createContent} showsVerticalScrollIndicator={false}>
+  //       <TouchableOpacity style={styles.uploadSection}>
+  //         <View style={styles.uploadIcon}>
+  //           <Text style={styles.uploadIconText}>📹</Text>
+  //         </View>
+  //         <Text style={styles.uploadText}>Upload Video</Text>
+  //       </TouchableOpacity>
         
-        <TextInput
-          style={styles.createInput}
-          placeholder="Title"
-          placeholderTextColor="#999"
-          value={formData.title}
-          onChangeText={(text) => setFormData({...formData, title: text})}
-        />
+  //       <TextInput
+  //         style={styles.createInput}
+  //         placeholder="Title"
+  //         placeholderTextColor="#999"
+  //         value={formData.title}
+  //         onChangeText={(text) => setFormData({...formData, title: text})}
+  //       />
         
-        <TextInput
-          style={[styles.createInput, styles.createTextArea]}
-          placeholder="Description"
-          placeholderTextColor="#999"
-          multiline
-          value={formData.description}
-          onChangeText={(text) => setFormData({...formData, description: text})}
-        />
+  //       <TextInput
+  //         style={[styles.createInput, styles.createTextArea]}
+  //         placeholder="Description"
+  //         placeholderTextColor="#999"
+  //         multiline
+  //         value={formData.description}
+  //         onChangeText={(text) => setFormData({...formData, description: text})}
+  //       />
         
-        <TouchableOpacity style={styles.dropdownInput}>
-          <Text style={formData.category ? styles.dropdownText : styles.dropdownPlaceholder}>
-            {formData.category || 'Category'}
-          </Text>
-          <Text style={styles.dropdownArrow}>⌄</Text>
-        </TouchableOpacity>
+  //       <TouchableOpacity style={styles.dropdownInput}>
+  //         <Text style={formData.category ? styles.dropdownText : styles.dropdownPlaceholder}>
+  //           {formData.category || 'Category'}
+  //         </Text>
+  //         <Text style={styles.dropdownArrow}>⌄</Text>
+  //       </TouchableOpacity>
         
-        <TextInput
-          style={styles.createInput}
-          placeholder="Date"
-          placeholderTextColor="#999"
-          value={formData.date}
-          onChangeText={(text) => setFormData({...formData, date: text})}
-        />
+  //       <TextInput
+  //         style={styles.createInput}
+  //         placeholder="Date"
+  //         placeholderTextColor="#999"
+  //         value={formData.date}
+  //         onChangeText={(text) => setFormData({...formData, date: text})}
+  //       />
         
-        <TextInput
-          style={styles.createInput}
-          placeholder="Location"
-          placeholderTextColor="#999"
-          value={formData.location}
-          onChangeText={(text) => setFormData({...formData, location: text})}
-        />
+  //       <TextInput
+  //         style={styles.createInput}
+  //         placeholder="Location"
+  //         placeholderTextColor="#999"
+  //         value={formData.location}
+  //         onChangeText={(text) => setFormData({...formData, location: text})}
+  //       />
         
-        <TouchableOpacity style={styles.postButton}>
-          <Text style={styles.postButtonText}>Post</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
-  );
+  //       <TouchableOpacity style={styles.postButton}>
+  //         <Text style={styles.postButtonText}>Post</Text>
+  //       </TouchableOpacity>
+  //     </ScrollView>
+  //   </View>
+  // );
 
   return (
     <View style={styles.container}>
@@ -370,10 +391,18 @@ export default function ExploreScreen() {
           <HomeScreen />
         </View>
         <View style={[styles.screenWrapper, { left: width }]}>
-          <HangoutDetailsScreen />
+         <HangoutDetailsScreen
+          selectedHangout={selectedHangout}
+          navigateToHome={navigateToHome}
+        />
         </View>
         <View style={[styles.screenWrapper, { left: width * 2 }]}>
-          <CreateHangoutScreen />
+                  <CreateHangoutScreen
+          navigateToHome={navigateToHome}
+          formData={formData}
+          setFormData={setFormData}
+        />
+
         </View>
       </Animated.View>
     </View>
