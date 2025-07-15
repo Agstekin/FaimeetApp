@@ -26,6 +26,7 @@ import { getHangoutDetails, createHangout } from '../firebase/firebaseService';
 // Screens
 import HangoutDetailsScreen from './HangoutDetailsScreen';
 import CreateHangoutScreen from './CreateHangoutScreen';
+import { GET_HANGOUT_DOC_ID } from '../firebase/firebaseConstants';
 
 
 // Mock data
@@ -62,10 +63,16 @@ const hangouts = [
   },
 ];
 
+
+
 // hangout data came from firebase
 const hangoutData = ''
 
 export default function ExploreScreen() {
+
+
+    const DocId = GET_HANGOUT_DOC_ID;
+  
 
   const [currentScreen, setCurrentScreen] = useState('home');
   const [selectedHangout, setSelectedHangout] = useState(null);
@@ -92,6 +99,84 @@ export default function ExploreScreen() {
       useNativeDriver: true,
     }).start();
   }, [currentScreen]);
+
+
+   const [hangoutDatas, setHangoutDatas] = useState(null);
+  
+  //  useEffect(() => {
+  //     const fetchData = async () => {
+  //       const details = await getHangoutDetails(DocId);
+  
+  //       console.log('Hangout Details:', details);
+  
+  
+  // //   let tok =   await createHangout({
+  // //   title: 'React Native Meetup',
+  // //   description: 'Discuss latest updates in React Native.',
+  // //   date: '2025-07-15',
+  // //   time: '6:30 PM',
+  // //   location: 'Bhopal madhya pradesh',
+  // // });
+  //       // console.log('New Hangout Created:', tok);
+  //       setHangoutDatas(details);
+  //     };
+  
+  //     fetchData();
+  //   }, []);
+ 
+    // 🔥 Firestore listener for real-time hangouts
+  const [hangoutsdatas, setHangoutsdatas] = useState([]);  // note: shadows mock data 'hangouts'
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('hangouts')
+      .onSnapshot(querySnapshot => {
+        const list = [];
+        querySnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          list.push({
+            id: docSnap.id,
+            title: data.title,
+            date: data.date,
+            time: data.time,
+            location: data.location,
+            category: data.environmentType,
+            image: data.imageUrl,
+          });
+        });
+        setHangoutsdatas(list);
+      });
+    return () => subscriber();
+  }, []);
+
+    console.log('Hangout:', hangoutsdatas);
+
+  // firebase 
+//   const [hangouts, setHangouts] = useState([]);
+
+// // Realtime listener for hangouts collection
+// useEffect(() => {
+//   const subscriber = firestore()
+//     .collection('hangouts')
+//     .onSnapshot(querySnapshot => {
+//       const list = [];
+//       querySnapshot.forEach(docSnap => {
+//         const data = docSnap.data();
+//         list.push({
+//           id: docSnap.id,
+//           title: data.title,
+//           date: data.date,
+//           time: data.time,
+//           location: data.location,
+//           category: data.environmentType,
+//           image: data.imageUrl,
+//         });
+//       });
+//       setHangouts(list);
+//     });
+
+//   return () => subscriber(); // unsubscribe on cleanup
+// }, []);
+
 
   const navigateToDetails = (hangout) => {
     setSelectedHangout(hangout);
@@ -191,7 +276,7 @@ export default function ExploreScreen() {
 </View>
     
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {hangouts.map((hangout) => (
+        {hangoutsdatas.map((hangout) => (
           <HangoutCard
             key={hangout.id}
             hangout={hangout}
@@ -558,6 +643,7 @@ applyButtonText: {
   scrollView: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingVertical:40,
   },
   
   // Hangout Card Styles
