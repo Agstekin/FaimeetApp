@@ -32,6 +32,7 @@ import { GET_HANGOUT_DOC_ID } from '../firebase/firebaseConstants';
 const LoginScreen = () => {
 
   const DocId = GET_HANGOUT_DOC_ID;
+  
 
   const [hangout, setHangout] = useState(null);
 
@@ -42,13 +43,13 @@ const LoginScreen = () => {
       console.log('Hangout Details:', details);
 
 
-  let tok =   await createHangout({
-  title: 'React Native Meetup',
-  description: 'Discuss latest updates in React Native.',
-  date: '2025-07-15',
-  time: '6:30 PM',
-  location: 'Bhopal madhya pradesh',
-});
+//   let tok =   await createHangout({
+//   title: 'React Native Meetup',
+//   description: 'Discuss latest updates in React Native.',
+//   date: '2025-07-15',
+//   time: '6:30 PM',
+//   location: 'Bhopal madhya pradesh',
+// });
       console.log('New Hangout Created:', tok);
       setHangout(details);
     };
@@ -125,18 +126,20 @@ const LoginScreen = () => {
 
   const testNavigation = async () => {
 
-    let tok =   await createHangout({
-  title: 'React Native Meetup',
-  description: 'Discuss latest updates in React Native.',
-  date: '2025-07-15',
-  time: '6:30 PM',
-  location: 'Bhopal madhya pradesh',
-  imageUrl: 'https://example.com/image.jpg', // Placeholder for image URL
-  environmentType: 'Outdoor', // Placeholder for environment type
+//     let tok =   await createHangout({
+//   title: 'React Native Meetup',
+//   description: 'Discuss latest updates in React Native.',
+//   date: '2025-07-15',
+//   time: '6:30 PM',
+//   location: 'Bhopal madhya pradesh',
+//   imageUrl: 'https://example.com/image.jpg', // Placeholder for image URL
+//   environmentType: 'Outdoor', // Placeholder for environment type
   
-});
+// })
 
-console.log('New Hangout Created with ID:', tok);
+
+
+// console.log('New Hangout Created with ID:', tok);
   console.log('Navigating to HomeScreen...');
   navigation.navigate('MainTabs', {
     name: 'Test User',
