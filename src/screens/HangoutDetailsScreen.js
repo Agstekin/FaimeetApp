@@ -42,9 +42,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, StatusBar } from 'react-native';
 import Gstyle from '../styles/stylesheetconst';
 
-export default function HangoutDetailsScreen({ hangout, onBack }) {
-  if (!hangout) return null;
-
+export default function HangoutDetailsScreen({ selectedHangout, hangout, onBack }) {
+  if (!selectedHangout) return null;
+  console.log(hangout);
+  console.log('selected: ',selectedHangout);
   return (
     <View style={Gstyle.screen}>
       <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
@@ -59,7 +60,7 @@ export default function HangoutDetailsScreen({ hangout, onBack }) {
       </View>
 
       <ScrollView style={Gstyle.detailsContent} showsVerticalScrollIndicator={false}>
-        <Text style={Gstyle.detailsHangoutTitle}>{hangout.title}</Text>
+        <Text style={Gstyle.detailsHangoutTitle}>{selectedHangout.title}</Text>
         <View style={Gstyle.detailsImageContainer}>
           <View style={Gstyle.detailsMockImage} />
           <TouchableOpacity style={Gstyle.playButton}>
@@ -67,20 +68,20 @@ export default function HangoutDetailsScreen({ hangout, onBack }) {
           </TouchableOpacity>
         </View>
 
-        <Text style={Gstyle.detailsMainTitle}>{hangout.title}</Text>
+        <Text style={Gstyle.detailsMainTitle}>{selectedHangout.title}</Text>
         <Text style={Gstyle.detailsDateTime}>{"25/30/2025"} • {"5:00 PM"}</Text>
         <View style={Gstyle.detailsLocationRow}>
           <Text style={Gstyle.locationIcon}>📍</Text>
-          <Text style={Gstyle.detailsLocationText}>{hangout.location}</Text>
+          <Text style={Gstyle.detailsLocationText}>{selectedHangout.location}</Text>
           <View style={Gstyle.detailsCategoryBadge}>
-            <Text style={Gstyle.categoryText}>{hangout.category}</Text>
+            <Text style={Gstyle.categoryText}>{selectedHangout.category}</Text>
           </View>
         </View>
 
-        <Text style={Gstyle.detailsDescription}>{hangout.description}</Text>
+        <Text style={Gstyle.detailsDescription}>{selectedHangout.description}</Text>
 
         <Text style={Gstyle.descriptionLabel}>Description</Text>
-        <Text style={Gstyle.fullDescription}>{hangout.description}</Text>
+        <Text style={Gstyle.fullDescription}>{selectedHangout.description}</Text>
 
         <TextInput
           style={Gstyle.messageInput}

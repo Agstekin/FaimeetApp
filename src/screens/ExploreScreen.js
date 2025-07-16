@@ -10,10 +10,13 @@ import {
   Animated,
   Dimensions,
   StatusBar,
-  Modal
+  Modal,
+  Alert
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
 
 import Gstyle from '../styles/stylesheetconst';
 const { width, height } = Dimensions.get('window');
@@ -129,6 +132,7 @@ export default function ExploreScreen() {
   useEffect(() => {
     const subscriber = firestore()
       .collection('hangouts')
+      .orderBy('timeCreated','desc')
       .onSnapshot(querySnapshot => {
         const list = [];
         querySnapshot.forEach(docSnap => {
@@ -141,9 +145,11 @@ export default function ExploreScreen() {
             location: data.location,
             category: data.environmentType,
             image: data.imageUrl,
+            description: data.description
           });
         });
         setHangoutsdatas(list);
+        
       });
     return () => subscriber();
   }, []);
@@ -212,6 +218,66 @@ export default function ExploreScreen() {
       }).start();
     };
 
+    const joinHangout= async (hangoutId) => {
+
+   //   alert('SEND RSVP FOR '+selectedHangout.id);
+
+    console.log('SEND RSVP FOR '+hangoutId);
+      
+        try{
+        const querySnapshot = await firestore()
+      .collection('rsvp_hangouts')
+      .where('user_id', '==', auth().currentUser?.uid)
+      .where('hangout_id', '==', hangoutId)
+      .get();
+          console.log('snap:', querySnapshot.empty);
+    if (!querySnapshot.empty) {
+     
+       Toast.show({
+              type: 'customError',
+              text1: 'Already Joined',
+              text2: 'You’ve already sent an RSVP to this hangout.',
+              position: 'bottom', // or 'top'
+              visibilityTime: 3000,
+         });
+    } else {
+        try {
+          const rsvpRef = firestore().collection('rsvp_hangouts').add({
+              hangout_id: hangoutId, // Reference to 'hangouts' collection
+              user_id: auth().currentUser?.uid || 'anonymous',
+              rsvp_sent_at: firestore.FieldValue.serverTimestamp(),
+              rsvp_withdraw_at: null,
+            });
+
+   // console.log('RSVP created with ID:', rsvpRef.id);
+            Toast.show({
+              type: 'customSuccess',
+              text1: 'RSVP sent!',
+              text2: 'You have successfully joined the hangout.',
+              position: 'bottom', // or 'top'
+              visibilityTime: 3000,
+            });
+        }
+      catch (error) {
+          console.error('Failed to create RSVP:', error);
+          Toast.show({
+            type: 'customError',
+            text1: 'RSVP FAILED!',
+            text2: 'You have successfully joined the hangout.',
+            position: 'bottom', // or 'top'
+            visibilityTime: 3000,
+          });
+          throw error;
+        }
+    }
+  } catch (error) {
+    console.error('Error checking RSVP:', error);
+    return false;
+  }
+   // const hangoutRef = firestore().collection('rsvp_hangouts').doc(hangoutId);
+ 
+  }; 
+   
     return (
       <Animated.View style={[styles.hangoutCard, { transform: [{ scale: scaleAnim }] }]}>
         <TouchableOpacity
@@ -236,7 +302,7 @@ export default function ExploreScreen() {
               <Text style={styles.locationIcon}>📍</Text>
               <Text style={styles.locationText}>{hangout.location}</Text>
             </View>
-            <TouchableOpacity style={styles.joinButton}>
+            <TouchableOpacity style={styles.joinButton} onPress={() => { joinHangout(hangout.id)}}>
               <Text style={styles.joinButtonText}>Join</Text>
             </TouchableOpacity>
           </View>
@@ -246,6 +312,8 @@ export default function ExploreScreen() {
   };
 
   const HomeScreen = () => (
+
+   
 
     <View style={styles.screen}>
   <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
@@ -478,6 +546,8 @@ export default function ExploreScreen() {
         <View style={[styles.screenWrapper, { left: width }]}>
          <HangoutDetailsScreen
           selectedHangout={selectedHangout}
+          hangout={hangoutsdatas}
+          onBack={navigateToHome}
           navigateToHome={navigateToHome}
         />
         </View>

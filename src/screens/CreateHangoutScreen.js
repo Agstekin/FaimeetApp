@@ -25,7 +25,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { getHangoutDetails, createHangout } from '../firebase/firebaseService';
 // import storage from '@react-native-firebase/storage'; // firevase storage service\
 import storage from '@react-native-firebase/storage';
-
+import Toast from 'react-native-toast-message';
 
 
 
@@ -94,8 +94,24 @@ export default function CreateHangoutScreen({ navigateToHome, formData, setFormD
     
 
     console.log('Hangout created with ID:', docIdDetails);
-    navigateToHome();}
+    
+    navigateToHome();
+   Toast.show({
+          type: 'customSuccess',
+          text1: 'Success!',
+          text2: 'You have successfully created the hangout.',
+          position: 'bottom', // or 'top'
+          visibilityTime: 4000,
+        });
+  }
     catch (err){
+      Toast.show({
+          type: 'customSuccess',
+          text1: 'Error!',
+          text2: 'Something went wrong.',
+          position: 'bottom', // or 'top'
+          visibilityTime: 4000,
+        });
       console.error('Error posting hangout:', err);
     }
   };
