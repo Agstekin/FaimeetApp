@@ -13,11 +13,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const screenHeaderOptions = {
-  headerTitle: () => (
-    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#333',fontFamily: 'serif', fontStyle: 'italic' }}>
-      FAIMEET
-    </Text>
-  ),
+  headerTitle: '', // This removes the header title
   headerTitleAlign: 'center',
   headerRight: () => (
     <TouchableOpacity onPress={() => alert('User icon clicked')} style={{ marginRight: 15 }}>
