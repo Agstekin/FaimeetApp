@@ -11,8 +11,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+import { PermissionsAndroid, Platform } from 'react-native';
+import { useEffect } from 'react';
+import { getCurrentLocation } from '../utils/images/location/LocationUtil';
+
 
 const screenHeaderOptions = {
+
+  
   headerTitle: '', // This removes the header title
   headerTitleAlign: 'center',
   headerRight: () => (
