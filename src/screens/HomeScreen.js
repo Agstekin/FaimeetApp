@@ -16,6 +16,11 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { getCurrentLocation } from '../utils/images/location/LocationUtil';
+import Geocoder from 'react-native-geocoder-reborn';
+// import Geocoder from '@timwangdev/react-native-geocoder';
+
+
 const { width, height } = Dimensions.get('window');
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +59,41 @@ const calendarEvents = {
 };
 
 export default function UserHomeScreen() {
+
+
+
+  // const [locationStr, setLocationStr] = useState(''); // NEW
+  const [locationStr, setLocationStr] = useState('Loading...');
+
+  useEffect(() => {
+    (async () => {
+      console.log('🏁 fetching coords...');
+      const loc = await getCurrentLocation();
+      if (loc) {
+        console.log('📍 coords:', loc);
+        try {
+          const results = await Geocoder.geocodePosition({
+            lat: loc.latitude,
+            lng: loc.longitude
+          });
+          console.log('🏠 address results:', results);
+          const addr = results[0]?.locality || 'Address not found';
+          console.log(addr)
+          setLocationStr(addr);
+        
+        } catch (e) {
+          console.error('🚨 geocode error:', e);
+          setLocationStr('Unable to find address');
+        }
+      } else {
+        console.warn('⚠️ coordinates unavailable');
+        setLocationStr('Location permission denied or unavailable');
+      }
+    })();
+  }, []);
+
+
+
   const [activeTab, setActiveTab] = useState('ALL');
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [search, setSearch] = useState('');
@@ -196,7 +236,7 @@ export default function UserHomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Welcome Back! 👋</Text>
-        <Text style={styles.headerSubtitle}>Discover amazing events</Text>
+        <Text style={styles.headerSubtitle}>Discover amazing events near {locationStr}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
