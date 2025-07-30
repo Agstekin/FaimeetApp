@@ -28,6 +28,7 @@ const { width, height } = Dimensions.get('window');
 // firebase services
 import { getHangoutDetails, createHangout } from '../firebase/firebaseService';
 import { GET_HANGOUT_DOC_ID } from '../firebase/firebaseConstants';
+import Logo from '../utils/images/logo.jpg'; 
 
 const LoginScreen = () => {
 
@@ -35,6 +36,7 @@ const LoginScreen = () => {
   
 
   const [hangout, setHangout] = useState(null);
+  const [username, setUsername] = useState('');
 
  useEffect(() => {
     const fetchData = async () => {
@@ -141,7 +143,20 @@ const LoginScreen = () => {
 
 // console.log('New Hangout Created with ID:', tok);
   console.log('Navigating to HomeScreen...');
-  navigation.navigate('MainTabs', {
+  navigation.navigate('Interests', { username });
+ /* navigation.navigate('MainTabs', {
+    name: 'Test User',
+    email: 'testuser@example.com',
+    photo: null,
+  });
+*/
+};
+
+const handleUserEail = async () => {
+
+
+  console.log('Navigating to User Login...');
+  navigation.navigate('UserLoginForm', {
     name: 'Test User',
     email: 'testuser@example.com',
     photo: null,
@@ -279,8 +294,10 @@ const signInfuncUserMail = () => {
     // You can access:
     console.log("Display Name:", usser.displayName);
     console.log("Email:", usser.email);
+
     console.log("UID:", usser.uid);
     console.log("Photo URL:", usser.photoURL);
+    setUsername(usser.email);
     testNavigation();
     return usser;
    }
@@ -319,6 +336,7 @@ const signInfuncUserMail = () => {
             ]}
           >
             <View style={styles.logoContainer}>
+             
               <Text style={styles.logoText}>FAI</Text>
               <Text style={styles.logoSubtext}>MEET</Text>
             </View>
@@ -359,7 +377,7 @@ const signInfuncUserMail = () => {
             <View style={styles.dividerLine} />
           </View>
 
-          <TouchableOpacity style={styles.guestButton} onPress={testNavigation}>
+          <TouchableOpacity style={styles.guestButton} onPress={handleUserEail}>
             <Text style={styles.guestButtonText}>Continue with E-Mail</Text>
           </TouchableOpacity>
 

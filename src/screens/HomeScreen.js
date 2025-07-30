@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import { Picker } from '@react-native-picker/picker';
 import { getCurrentLocation } from '../utils/images/location/LocationUtil';
 import Geocoder from 'react-native-geocoder-reborn';
 // import Geocoder from '@timwangdev/react-native-geocoder';
@@ -510,28 +510,35 @@ const styles = StyleSheet.create({
     bottom: 4,
   },
   tabIndicator: {
-    width: (width - 48) / 4,
+  /*  width: (width - 48) / 4,
     height: '100%',
     backgroundColor: '#007AFF',
-    borderRadius: 21,
+    borderRadius: 21,*/
   },
   tabButton: {
-    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: 'transparent', // Inactive tab background
+    marginRight: 10,
+    /*flex: 1,
     paddingVertical: 12,
     alignItems: 'center',
-    zIndex: 1,
+    zIndex: 1,*/
   },
   activeTabButton: {
     // Styles handled by indicator
+    backgroundColor: '#007AFF',
   },
   tabText: {
-    color: '#666',
+    color: '#333',
     fontSize: 14,
     fontWeight: '600',
   },
   activeTabText: {
     color: '#fff',
   },
+  
   eventsContainer: {
     paddingBottom: 20,
   },

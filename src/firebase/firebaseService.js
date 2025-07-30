@@ -16,6 +16,7 @@ export const getHangoutDetails = async (documentId) => {
         location: data.location,
         time: data.time,
         title: data.title,
+        imageUrl: data.imageUrl
       };
     } else {
       console.warn('No such document!');
@@ -68,7 +69,7 @@ export const createHangout = async ({
   time,            // "6:30 PM"
   location,
   imageUrl,
-  environmentType,
+  category,
 }) => {
   try {
     const uid = auth().currentUser?.uid || 'anonymous';
@@ -82,7 +83,7 @@ export const createHangout = async ({
         timeCreated: firestore.FieldValue.serverTimestamp(),
         location,
         imageUrl,
-        environmentType,
+        environmentType: category,
         createdBy: uid,
         createdAt: firestore.FieldValue.serverTimestamp(),
       });
